@@ -106,4 +106,45 @@ public class EnrollmentDao {
     // 未来可以添加其他 Enrollment 相关的方法，例如：
     // public int addEnrollment(Enrollment enrollment) { ... }
     // public int deleteEnrollment(int enrollmentId) { ... }
+
+    /**
+     * 根据学生ID获取该学生已选修的所有课程ID列表。
+     * @param studentId 学生的ID。
+     * @return 包含课程ID的列表 (List<Integer>)。
+     */
+    public List<Integer> getEnrolledCourseIdsByStudentId(int studentId) {
+        String sql = "SELECT course_id FROM Enrollment WHERE student_id = ?";
+        try {
+            return jdbcTemplate.queryForList(sql, Integer.class, studentId);
+        } catch (Exception e) {
+            System.err.println("获取学生 (ID: " + studentId + ") 已选课程ID列表失败: " + e.getMessage());
+            e.printStackTrace();
+            return Collections.emptyList();
+        }
+    }
+
+    /**
+     * 添加一条新的选课记录。
+     * 成绩 (grade) 默认为 NULL。
+     * @param enrollment 包含 studentId 和 courseId 的 Enrollment 对象。
+     * @return 如果插入成功返回影响的行数 (通常为1)，否则返回0或抛出异常。
+     *         使用 INSERT IGNORE 来避免因重复选课 (违反 UNIQUE constraint) 而抛出异常，
+     *         这种情况下会返回0。
+     */
+    public int addEnrollment(Enrollment enrollment) {
+        // 使用 INSERT IGNORE 避免因 (student_id, course_id) 唯一约束冲突而抛出异常
+        // 如果记录已存在，INSERT IGNORE 会静默忽略，并返回0行受影响。
+        String sql = "INSERT IGNORE INTO Enrollment (student_id, course_id, grade) VALUES (?, ?, ?)";
+        try {
+            return jdbcTemplate.update(sql,
+                    enrollment.getStudentId(),
+                    enrollment.getCourseId(),
+                    null // 选课时成绩默认为NULL
+            );
+        } catch (Exception e) {
+            System.err.println("添加选课记录失败 (studentId: " + enrollment.getStudentId() + ", courseId: " + enrollment.getCourseId() + "): " + e.getMessage());
+            e.printStackTrace();
+            return 0; // 表示失败
+        }
+    }
 }

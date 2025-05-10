@@ -54,7 +54,7 @@ public class LeaveRequestService {
      * @param studentId 学生的ID。
      * @return 包含该学生所有请假申请的列表。
      */
-    public List<LeaveRequest> listLeaveRequestsByStudent(int studentId) {
+    public List<LeaveRequest> getLeaveRequestsByStudentId(int studentId) { // 方法名已修改
         if (studentId <= 0) {
             System.err.println("LeaveRequestService: 无效的学生ID: " + studentId);
             return Collections.emptyList();

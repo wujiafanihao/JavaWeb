@@ -199,4 +199,39 @@ public class CourseService {
             return false;
         }
     }
+
+    /**
+     * 获取指定学生可选的课程列表。
+     * 这将返回所有课程中排除了该学生已经选修的课程。
+     * @param studentId 学生的ID。
+     * @return 可选课程的列表。
+     */
+    public List<Course> getAvailableCoursesForStudent(int studentId) {
+        if (studentId <= 0) {
+            System.err.println("CourseService: 无效的学生ID: " + studentId + "，无法获取可选课程。");
+            return Collections.emptyList();
+        }
+        try {
+            List<Course> allCourses = courseDao.searchCourses(null); // 获取所有课程
+            if (CollectionUtils.isEmpty(allCourses)) {
+                return Collections.emptyList();
+            }
+
+            List<Integer> enrolledCourseIds = enrollmentService.getEnrolledCourseIdsByStudentId(studentId);
+
+            if (CollectionUtils.isEmpty(enrolledCourseIds)) {
+                return allCourses; // 如果学生没有选修任何课程，则所有课程都可选
+            }
+
+            // 过滤掉已选课程
+            return allCourses.stream()
+                    .filter(course -> !enrolledCourseIds.contains(course.getCourseId()))
+                    .collect(java.util.stream.Collectors.toList());
+
+        } catch (Exception e) {
+            System.err.println("CourseService: 获取学生 (ID: " + studentId + ") 可选课程时发生错误: " + e.getMessage());
+            e.printStackTrace();
+            return Collections.emptyList();
+        }
+    }
 }

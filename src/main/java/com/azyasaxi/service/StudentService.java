@@ -248,6 +248,35 @@ public class StudentService {
         return studentWithDetails; // 返回填充了所有详细信息的Student对象
     }
 
+    /**
+     * 认证学生用户。
+     * @param username 用户名
+     * @param rawPassword 原始密码 (未哈希)
+     * @return 如果认证成功，返回 Student 对象；否则返回 null。
+     */
+    public Student authenticateStudent(String username, String rawPassword) {
+        if (!StringUtils.hasText(username) || !StringUtils.hasText(rawPassword)) {
+            return null; // 用户名或密码为空，认证失败
+        }
+
+        try {
+            Student student = studentDao.getStudentByUsername(username.trim());
+            if (student != null) {
+                // 验证密码 (假设密码在存储时已经哈希)
+                // CalculateSHA256 工具类用于哈希传入的原始密码
+                String hashedRawPassword = CalculateSHA256.calculateSHA256(rawPassword);
+                String hashedStoredPassword = CalculateSHA256.calculateSHA256(student.getPassword());
+                if (hashedRawPassword.equals(hashedStoredPassword)) {
+                    return student; // 密码匹配，认证成功
+                }
+            }
+        } catch (Exception e) {
+            System.err.println("StudentService: 学生认证时发生错误 (username: " + username + "): " + e.getMessage());
+            e.printStackTrace();
+        }
+        return null; // 学生不存在或密码不匹配
+    }
+
     // --- 数据统计相关服务方法 ---
 
     /**
