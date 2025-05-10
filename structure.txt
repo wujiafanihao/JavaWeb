@@ -18,6 +18,10 @@
                     └──AdminDashboardServlet // 用于重定向提供给adminView数据，有班级列表和学生列表
                     └──DataStatsServlet // 用于重定向给dataStats.jsp页面
                     └──SystemLogServlet
+                └──student
+                    └──EnrollCourseServlet
+                    └──StudentDashboardServlet
+                    └──SubmitLeaveRequestServlet
                 └──common
                     └──LoginServlet                 // 用于分析请求中的用户名和密码进行转向
                     └──LogoutServlet                // 退出登入，会清楚session和cookie
