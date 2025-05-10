@@ -118,9 +118,8 @@ public class ClassInfoDao {
         }
     }
 
-    // --- 修改方法 (保持原有) ---
+    // --- 增删改 ---
     public int addClassInfo(ClassInfo classInfo) {
-        // (与您之前提供的代码一致)
         String sql = "INSERT INTO ClassInfo (class_name, major_id) VALUES (?, ?)";
         try {
             Integer majorId = classInfo.getMajorId();
@@ -133,7 +132,6 @@ public class ClassInfoDao {
     }
 
     public int deleteClassInfo(int classId) {
-        // (与您之前提供的代码一致)
         String sql = "DELETE FROM ClassInfo WHERE class_id = ?";
         try {
             return jdbcTemplate.update(sql, classId);
@@ -144,5 +142,4 @@ public class ClassInfoDao {
         }
     }
 
-    // updateClassInfo 方法可以后续根据需求添加
 }

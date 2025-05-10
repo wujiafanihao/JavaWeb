@@ -68,11 +68,4 @@ public class AdminDao {
         }
     }
 
-    // 未来可以根据需求添加其他使用 JdbcTemplate 的管理员数据库操作方法，例如：
-    // public int updateAdminPassword(String username, String newPassword) {
-    //     String sql = "UPDATE Admin SET password = ? WHERE username = ?";
-    //     return jdbcTemplate.update(sql, newPassword, username);
-    // }
-    //
-
 }

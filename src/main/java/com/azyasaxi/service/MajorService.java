@@ -30,5 +30,4 @@ public class MajorService {
         return majorDao.getAllMajors();
     }
 
-    // 未来可以添加其他与专业相关的业务逻辑方法
 }

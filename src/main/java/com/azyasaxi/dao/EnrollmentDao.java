@@ -103,10 +103,6 @@ public class EnrollmentDao {
         }
     }
 
-    // 未来可以添加其他 Enrollment 相关的方法，例如：
-    // public int addEnrollment(Enrollment enrollment) { ... }
-    // public int deleteEnrollment(int enrollmentId) { ... }
-
     /**
      * 根据学生ID获取该学生已选修的所有课程ID列表。
      * @param studentId 学生的ID。
@@ -147,4 +143,5 @@ public class EnrollmentDao {
             return 0; // 表示失败
         }
     }
+
 }

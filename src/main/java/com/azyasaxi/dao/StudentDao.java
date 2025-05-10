@@ -68,12 +68,12 @@ public class StudentDao {
 
             // 填充专业信息
             // int majorId = rs.getInt("m_major_id"); // 如果需要专业ID本身
-            // if (!rs.wasNull()) { student.setMajorId(majorId); } // 假设Student模型有majorId字段
+            // if (!rs.wasNull()) { student.setMajorId(majorId); }
             student.setMajorName(rs.getString("m_major_name"));
 
             // 填充学院信息
             // int collegeId = rs.getInt("co_college_id"); // 如果需要学院ID本身
-            // if (!rs.wasNull()) { student.setCollegeId(collegeId); } // 假设Student模型有collegeId字段
+            // if (!rs.wasNull()) { student.setCollegeId(collegeId); }
             student.setCollegeName(rs.getString("co_college_name"));
 
             // enrollments 和 totalEarnedCredits 将在Service层单独获取并设置
@@ -163,7 +163,6 @@ public class StudentDao {
         }
     }
 
-    // 在 StudentDao.java 中
     /**
      * 根据班级ID获取该班级下的所有学生基本信息。
      *
@@ -225,7 +224,7 @@ public class StudentDao {
         }
     }
 
-    // --- 新增：获取学生完整详细信息的方法 ---
+    // 获取学生完整详细信息的方法 ---
     /**
      * 根据学生ID获取学生的详细基本信息，包括班级、专业和学院名称。
      * 这个方法返回一个 Student 对象，填充了这些关联信息。
@@ -261,7 +260,6 @@ public class StudentDao {
 
     /**
      * 根据学生ID获取该学生所有选课记录（包含课程详情、任课老师和成绩）。
-     * (此方法与之前 StudentDao 中的版本相同)
      * @param studentId 学生的ID。
      * @return 包含 Enrollment 对象的列表。
      */
@@ -376,17 +374,17 @@ public class StudentDao {
         // IFNULL(cs.total_credits, 0) 用于处理没有学分记录的学生，将其视为0学分
         String sql = "SELECT " +
                      "  CASE " +
-                     "    WHEN IFNULL(cs.total_credits, 0) BETWEEN 0 AND 29.99 THEN '0-29 学分' " +
-                     "    WHEN IFNULL(cs.total_credits, 0) BETWEEN 30 AND 59.99 THEN '30-59 学分' " +
-                     "    WHEN IFNULL(cs.total_credits, 0) BETWEEN 60 AND 89.99 THEN '60-89 学分' " +
+                     "    WHEN IFNULL(cs.total_credits, 0) BETWEEN 0 AND 4.99 THEN '0-5 学分' " +
+                     "    WHEN IFNULL(cs.total_credits, 0) BETWEEN 5 AND 9.99 THEN '5-10 学分' " +
+                     "    WHEN IFNULL(cs.total_credits, 0) BETWEEN 10 AND 14.99 THEN '10-15 学分' " +
                      "    WHEN IFNULL(cs.total_credits, 0) >= 90 THEN '90+ 学分' " +
-                     "    ELSE '0-29 学分' " + // 确保所有学生都被统计
+                     "    ELSE '0-5 学分' " + // 确保所有学生都被统计
                      "  END AS credit_range, " +
                      "  COUNT(s.student_id) AS student_count " +
                      "FROM Student s " +
                      "LEFT JOIN CreditSummary cs ON s.student_id = cs.student_id " +
                      "GROUP BY credit_range " +
-                     "ORDER BY FIELD(credit_range, '0-29 学分', '30-59 学分', '60-89 学分', '90+ 学分')";
+                     "ORDER BY FIELD(credit_range, '0-5 学分', '5-10 学分', '10-15 学分', '15+ 学分')";
         try {
             return jdbcTemplate.queryForList(sql);
         } catch (Exception e) {

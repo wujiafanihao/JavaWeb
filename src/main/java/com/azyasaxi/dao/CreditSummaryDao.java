@@ -115,7 +115,4 @@ public class CreditSummaryDao {
         }
     }
 
-    // 注意：CreditSummary 是一个视图，通常是只读的。
-    // 因此，一般不会有 add, update, delete 等修改数据的方法针对这个视图。
-    // 对学分的修改是通过 Enrollment 表中的成绩来实现的，视图会自动更新。
 }

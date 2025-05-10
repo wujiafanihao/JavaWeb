@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/admin.css">
 </head>
 <body>
-<%-- 头部 (与之前代码一致，此处省略) --%>
+<%-- 头部 --%>
 <header class="admin-header">
     <div class="logo">学生管理系统</div>
     <nav class="main-nav">
@@ -24,7 +24,7 @@
 </header>
 
 <div class="admin-container">
-    <!-- 侧边菜单 (与之前代码一致) -->
+    <!-- 侧边菜单 -->
     <aside class="sidebar">
         <h3>功能导航</h3>
         <ul>
@@ -37,7 +37,7 @@
 
     <!-- 主要内容区域 -->
     <main class="admin-main">
-        <%-- Flash 消息 (与之前代码一致) --%>
+        <%-- Flash 消息 --%>
         <c:if test="${not empty sessionScope.successMessage}">
             <div class="alert alert-success">
                 <c:out value="${sessionScope.successMessage}" /><c:remove var="successMessage" scope="session" />
@@ -52,7 +52,7 @@
             <div class="alert alert-danger"><c:out value="${requestScope.errorMessage}" /></div>
         </c:if>
 
-        <!-- 学生管理模块 (与之前代码一致，此处省略) -->
+        <!-- 学生管理模块 -->
         <section id="student" class="module">
             <h2>学生管理</h2>
             <%-- ... 学生和班级列表的卡片 ... --%>
@@ -167,7 +167,7 @@
             </div>
         </section>
 
-        <!-- 课程管理模块 (与之前代码一致，此处省略) -->
+        <!-- 课程管理模块 -->
         <section id="course" class="module">
             <h2>课程管理</h2>
             <%-- ... 课程列表的卡片 ... --%>
@@ -345,7 +345,7 @@
     </main>
 </div>
 
-<%-- 页脚 (与之前代码一致) --%>
+<%-- 页脚 --%>
 <footer class="admin-footer">
     <p>© ${java.time.Year.now()} 学生管理系统 | 当前管理员：<c:out value="${sessionScope.username}"/></p>
 </footer>

@@ -57,5 +57,4 @@ public class MajorDao {
         }
     }
 
-    // 未来可以添加其他方法，如 findById, addMajor, updateMajor, deleteMajor等
 }

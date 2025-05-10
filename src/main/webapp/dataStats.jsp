@@ -8,36 +8,8 @@
     <title>学分数据统计 - 管理员控制台</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/admin.css">
     <%-- 引入 Chart.js --%>
-<%--    <script src="${pageContext.request.contextPath}/assets/js/chart.js"></script>--%>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js" integrity="sha512-CQBWl4fJHWbryGE+Pc7UAxWMUMNMWzWxF4SQo9CgkJIN1kx6djDQZjh3Y8SZ1d+6I+1zze6Z7kHXO7q3UyZAWw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <style>
-        .stats-container {
-            max-width: 1200px;
-            margin: 2rem auto;
-            padding: 1rem; /* 减少一些padding，让图表有更多空间 */
-        }
-        .chart-card {
-            background: #fff;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-            padding: 1.5rem;
-            margin-bottom: 2rem;
-        }
-        .chart-card h3 {
-            text-align: center;
-            margin-bottom: 1.5rem;
-            color: #2c3e50;
-        }
-        .charts-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-            gap: 2rem;
-        }
-        canvas {
-            max-width: 100%;
-            height: auto; /* 保持宽高比 */
-        }
-    </style>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/dataSats.css">
 </head>
 <body>
     <header class="admin-header">

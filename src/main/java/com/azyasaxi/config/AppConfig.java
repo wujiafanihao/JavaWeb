@@ -59,7 +59,4 @@ public class AppConfig {
         return new org.springframework.jdbc.core.JdbcTemplate(dataSource);
     }
 
-    // 未来可以在这里添加更多的 @Bean 定义，例如：
-    // - TransactionManager (用于声明式事务管理)
-    // - 其他应用程序级别的共享服务或组件
 }

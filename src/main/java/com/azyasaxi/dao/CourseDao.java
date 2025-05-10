@@ -45,7 +45,7 @@ public class CourseDao {
 
             // 处理 major_id (可能为 NULL, 尽管在您的表结构中 major_id 是 Course 表的一个外键，
             // 但根据您的需求 "课程所属专业，用于区分专业课和选修课的判断"，它可能允许为空来表示全校选修课)
-            // 如果您的业务逻辑要求major_id不能为空，那么这里的处理可以简化。
+            // 如果业务逻辑要求major_id不能为空，那么这里的处理可以简化。
             int majorId = rs.getInt("major_id");
             if (rs.wasNull()) {
                 course.setMajorId(null);
@@ -107,7 +107,7 @@ public class CourseDao {
      * 或者，您可以选择先创建专业（如果不存在）或让调用者确保专业已存在并传递 major_id。
      * 为了简化，这里假设调用者会提供一个有效的 major_id (或者允许 major_id 为 null)。
      *
-     * 根据您的描述 "通过课程名称，任课老师，学分和专业名称进行添加"，
+     * 通过课程名称，任课老师，学分和专业名称进行添加"，
      * 我们需要先根据专业名称查询到 major_id。
      *
      * @param course 包含新课程信息的 Course 对象。
@@ -137,6 +137,7 @@ public class CourseDao {
             // 如果没有提供专业名称，或者您允许课程没有专业关联，则 majorIdToInsert 保持为 null
             // 确保您的 Course 表的 major_id 字段允许 NULL 值，如果这是您的业务需求。
             // 根据您的表结构，major_id 是外键，所以它要么是有效的Major表ID，要么如果允许NULL，则为NULL。
+            System.out.println("添加课程时未提供专业名称。");
         }
 
         try {
@@ -245,4 +246,5 @@ public class CourseDao {
             return 0;
         }
     }
+
 }
