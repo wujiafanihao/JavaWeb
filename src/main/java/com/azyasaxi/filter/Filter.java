@@ -35,15 +35,15 @@ public class Filter implements jakarta.servlet.Filter { // 实现 jakarta.servle
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
-        
+
         // 将 ServletRequest 和 ServletResponse 转换为 HTTP 特定类型的对象，以便使用 HTTP 相关的方法。
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         HttpServletResponse httpResponse = (HttpServletResponse) response;
-        
+
         // 获取当前会话 (HttpSession)。
         // 参数 false 表示如果当前请求没有关联的会话，则不创建新的会话，返回 null。
         HttpSession session = httpRequest.getSession(false);
-        
+
         // 获取当前请求的路径，不包括应用的上下文路径 (ContextPath)。
         // 例如，如果完整 URL 是 http://localhost:8080/StudentSystem/login，
         // getContextPath() 返回 "/StudentSystem"，
@@ -56,11 +56,16 @@ public class Filter implements jakarta.servlet.Filter { // 实现 jakarta.servle
         if (path.isEmpty()) {
             path = "/";
         }
-        
-        // 定义公共可访问路径，包括首页、登录处理Servlet、登录页面JSP和静态资源
-        // loginPage.jsp 是实际的登录表单页面，/login 是处理登录的Servlet
+
+        // 定义公共可访问路径，包括首页、登录处理Servlet、登出处理Servlet、登录页面JSP和静态资源
+        // loginPage.jsp 是实际的登录表单页面，/login 是处理登录的Servlet, /logout 是处理登出的Servlet
         // 确保 loginPage.jsp 也被正确地包含在公共访问路径中
-        if (path.equals("/") || path.startsWith("/index.jsp") || path.startsWith("/login") || path.startsWith("/loginPage.jsp") || path.startsWith("/assets/")) {
+        if (path.equals("/") ||
+                path.startsWith("/index.jsp") ||
+                path.startsWith("/login") ||      // 登录处理Servlet
+                path.startsWith("/logout") ||     // 新增：登出处理Servlet
+                path.startsWith("/loginPage.jsp") ||
+                path.startsWith("/assets/")) {
             chain.doFilter(request, response); // 放行公共路径
             return; // 结束当前过滤器的处理
         }
@@ -88,7 +93,7 @@ public class Filter implements jakarta.servlet.Filter { // 实现 jakarta.servle
             // 如果用户是管理员
             // 管理员可以访问 /admin/dashboard (用于加载数据的Servlet) 和 /adminView.jsp (实际的视图)
             if (path.startsWith("/admin/dashboard") || path.startsWith("/adminView.jsp") /* || path.startsWith("/someOtherAdminPath") */) {
-                System.out.println("[Filter] Admin access GRANTED for: " + path); // 添加调试打印
+                // System.out.println("[Filter] Admin access GRANTED for: " + path);
                 chain.doFilter(request, response); // 允许访问
             } else if (path.startsWith("/studentView.jsp")) {
                 // 如果管理员尝试访问学生界面，重定向到管理员主界面

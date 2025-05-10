@@ -100,3 +100,23 @@ h1 {
 .login-button:hover {
     background-color: #0056b3;
 }
+
+/* 为提示信息添加一些基本样式，使其更美观 */
+.messagePopup {
+    padding: 10px 15px; /* 上下10px，左右15px的内边距 */
+    margin-bottom: 20px; /* 与下方元素的间距 */
+    border: 1px solid transparent; /* 边框，颜色由具体类定义 */
+    border-radius: 4px; /* 圆角边框 */
+    text-align: center; /* 文字居中 */
+    font-weight: bold; /* 字体加粗 */
+}
+.successMessage {
+    color: #155724; /* 深绿色文字 */
+    background-color: #d4edda; /* 淡绿色背景 */
+    border-color: #c3e6cb; /* 边框颜色 */
+}
+.errorMessage {
+    color: #721c24; /* 深红色文字 */
+    background-color: #f8d7da; /* 淡红色背景 */
+    border-color: #f5c6cb; /* 边框颜色 */
+}

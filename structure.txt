@@ -14,16 +14,41 @@
     ├──java
         ├──com.azyasaxi
             ├── controller         // Servlet 控制器，如 StudentServlet、LoginServlet 等
-                └──AdminDashboardServlet // 用于重定向提供给adminView数据，有班级列表和学生列表
-                └──LoginServlet                 // 用于分析请求中的用户名和密码进行转向
-                └──SaveClassServlet             // 负责处理添加新班级的表单提交
-                └──SaveStudentServlet           // 负责处理添加新学生的表单提交。
-                └──ShowAddClassFormServlet      // 负责显示用于添加新班级的表单页面, 提供给addClassForm.jsp数据并且重定向
-                └──ShowAddStudentFormServlet    // 负责显示用于添加新学生的表单页面，提供给addStudentForm.jsp数据并且重定向
+                └──admin
+                    └──AdminDashboardServlet // 用于重定向提供给adminView数据，有班级列表和学生列表
+                    └──DataStatsServlet // 用于重定向给dataStats.jsp页面
+                    └──SystemLogServlet
+                └──common
+                    └──LoginServlet                 // 用于分析请求中的用户名和密码进行转向
+                    └──LogoutServlet                // 退出登入，会清楚session和cookie
+                └──detail
+                    └──ViewClassInfoDetailsServlet
+                    └──ViewCourseDetailsServlet
+                    └──ViewStudentCreditDetailsServlet
+                    └──ViewStudentDetailsServlet
+                └──delete
+                    └──DeleteClassServlet
+                    └──DeleteCourseServlet
+                    └──DeleteStudentServlet
+                └──edit
+                    └──ApproveLeaveServlet
+                    └──RejectLeaveServle
+                    └──UpdateStudentGradeServlet
+                └──saveData
+                    └──SaveClassServlet             // 负责处理添加新班级的表单提交
+                    └──SaveCourseServlet
+                    └──SaveStudentServlet           // 负责处理添加新学生的表单提交。
+                └──showDataForm
+                    └──ShowAddClassFormServlet      // 负责显示用于添加新班级的表单页面, 提供给addClassForm.jsp数据并且重定向
+                    └──ShowAddCourseFormServlet
+                    └──ShowAddStudentFormServlet    // 负责显示用于添加新学生的表单页面，提供给addStudentForm.jsp数据并且重定向
+                    └──ShowEditCourseFormServlet
+                    └──ShowEditStudentFormServlet
             ├── filter             // 登录过滤器等 Filter 类
                 └──Filter
             ├── model              // 实体类：Student, ClassInfo, Course, CreditSummary 等
                 └──Admin
+                └──AdminLog
                 └──ClassInfo
                 └──College
                 └──Course
@@ -35,15 +60,26 @@
                 └──Student
             ├── dao                // 数据库操作类：StudentDAO, CourseDAO 等
                 └──AdminDao
+                └──AdminLogDao
                 └──ClassInfoDao
+                └──CourseDao
+                └──CreditSummaryDao
+                └──EnrollmentDao
+                └──LeaveRequestDao
                 └──MajorDao
                 └──StudentDao
             ├── service            // 业务逻辑类：StudentService, CourseService 等
                 └──AdminService
+                └──AdminLogService
                 └──ClassInfoService
+                └──CreditSummaryService
+                └──EnrollmentService
+                └──LeaveRequestService
+                └──CourseService
                 └──MajorService
                 └──StudentService
             ├── utils              // 工具类：DBHelper, JDBC 连接等
+                └──CalculateSHA256          // 将明文密码计算成哈希值
                 └──DataBase
                 └──DBHelper
                 └──StudentDataInitializer // 这个类生成了50个学生信息，以及他们的数据
@@ -56,17 +92,25 @@
             └──web.xml
         └──assets                  // 静态资源，如 CSS、JS、图片等
             └──css                  // CSS 文件
+                └──admin.css
                 └──index.css
                 └──login.css
+                └──student.css
             └──js
                 └──admin.js
+                └──login.js         // 对用户输入的密码进行哈希值加密
             └──ima.png
         └──addClassForm.jsp
+        └──addCourseForm.jsp
         └──addStudentForm.jsp
         └──index.jsp
         └──loginPage.jsp
+        └──studentCreditDetails.jsp
         └──adminView.jsp
+        └──dataStats.jsp
+        └──detail.jsp
         └──studentView.jsp
+        └──systemLogs.jsp
 ├──pom.xml                         // Maven 项目配置文件
 
 controller：处理请求，调用 service 层，转发到 JSP；
@@ -166,4 +210,16 @@ config：存 Spring 配置（可用注解或 XML）；
         "JOIN Course c ON e.course_id = c.course_id " +
         "JOIN Student s ON e.student_id = s.student_id " +
         "WHERE e.grade >= 60.0 " + // 假设60分及以上获得学分
-        "GROUP BY e.student_id, s.name;"
+        "GROUP BY e.student_id, s.name;",
+// 12. 创建AdminLog表 (管理员操作日志)
+"CREATE TABLE IF NOT EXISTS AdminLog (" +
+        "log_id INT PRIMARY KEY AUTO_INCREMENT," +
+        "admin_id INT," +
+        "admin_username VARCHAR(50)," +
+        "action_type VARCHAR(50) NOT NULL," +
+        "target_entity VARCHAR(100)," +
+        "target_entity_id VARCHAR(50)," +
+        "action_description TEXT," +
+        "action_timestamp DATETIME DEFAULT CURRENT_TIMESTAMP," +
+        "FOREIGN KEY (admin_id) REFERENCES Admin(admin_id) ON DELETE SET NULL" +
+        ");"

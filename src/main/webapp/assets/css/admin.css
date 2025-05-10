@@ -1,14 +1,54 @@
-/* 基础样式 */
+/* admin.css - 管理员界面样式表 */
+
+/* :root 定义全局CSS变量 */
+:root {
+    --primary-color: #3498db;         /* 主色调 - 蓝色 */
+    --primary-color-darker: #2980b9;  /* 主色调深色版 (用于 :hover) */
+    --secondary-color: #2c3e50;       /* 次要色调 - 深蓝灰色 */
+    --secondary-color-lighter: #34495e; /* 次要色调浅色版 */
+    --success-color: #27ae60;         /* 成功/添加操作颜色 - 绿色 */
+    --success-color-darker: #229954;  /* 成功色深色版 (用于 :hover) */
+    --danger-color: #e74c3c;          /* 危险/删除操作颜色 - 红色 */
+    --light-gray-bg: #f4f4f4;         /* 页面背景浅灰色 */
+    --white-color: #ffffff;           /* 白色 */
+    --dark-text-color: #333;          /* 主要文本颜色 */
+    --light-text-color: #777;         /* 次要文本颜色 */
+    --border-color: #ddd;             /* 边框颜色 */
+    --border-color-light: #eee;       /* 浅边框/分隔线颜色 */
+    --table-header-bg: #f0f0f0;       /* 表头背景色 */
+    --hover-bg-color: #f9f9f9;        /* 悬停背景色 */
+    --focus-ring-color: rgba(52, 152, 219, 0.25); /* 主色调的焦点光晕 */
+    --focus-ring-success-color: rgba(46, 204, 113, 0.4); /* 成功色的焦点光晕 */
+
+    --font-family-base: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* 基础字体 */
+    --base-font-size: 16px;           /* 基础字体大小 (用于rem单位计算) */
+    --line-height-base: 1.6;          /* 基础行高 */
+
+    --border-radius-base: 8px;        /* 基础圆角 */
+    --border-radius-small: 4px;       /* 小圆角 */
+    --box-shadow-base: 0 2px 5px rgba(0, 0, 0, 0.08); /* 更柔和的基础阴影 */
+    --box-shadow-hover: 0 4px 8px rgba(0, 0, 0, 0.12); /* 悬停阴影 */
+
+    --sidebar-width: 230px;           /* 侧边栏宽度 */
+    --header-height: 60px;            /* 头部高度 (估算，可调整) */
+}
+
+/* 基础样式重置与设定 */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Segoe UI', sans-serif;
+}
+
+html {
+    font-size: var(--base-font-size); /* 设置根字体大小 */
 }
 
 body {
-    background-color: #f4f4f4;
-    color: #333;
+    background-color: var(--light-gray-bg);
+    color: var(--dark-text-color);
+    font-family: var(--font-family-base);
+    line-height: var(--line-height-base);
     display: flex;
     flex-direction: column;
     min-height: 100vh;
@@ -16,333 +56,491 @@ body {
 
 /* 头部样式 */
 .admin-header {
-    background: linear-gradient(90deg, #2c3e50, #34495e);
-    color: white;
-    padding: 1rem 2rem;
+    background: linear-gradient(90deg, var(--secondary-color), var(--secondary-color-lighter));
+    color: var(--white-color);
+    padding: 0 2rem; /* 移除垂直padding，通过align-items和line-height控制高度 */
+    height: var(--header-height);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--box-shadow-base);
+    position: sticky; /* 使头部在滚动时固定 */
+    top: 0;
+    z-index: 1000; /* 确保在其他内容之上 */
 }
 
 .logo {
-    font-size: 1.5rem;
+    font-size: 1.6rem; /* 略微增大 */
     font-weight: bold;
 }
 
 .main-nav ul {
     list-style: none;
     display: flex;
-    gap: 1.5rem;
+    gap: 1.5rem; /* 链接间距 */
 }
 
-.main-nav a {
-    color: white;
-    text-decoration: none;
-    transition: color 0.3s;
-    padding: 0.5em 0; /* 增加垂直内边距以帮助居中 */
-    display: inline-block; /* 使内边距生效并能垂直对齐 */
-    line-height: 1; /* 确保文字基线对齐 */
-}
-
-.main-nav li { /* 确保列表项本身也参与对齐 */
+.main-nav li { /* 确保列表项参与对齐 */
     display: flex;
     align-items: center;
 }
 
-.main-nav a:hover {
-    color: #1abc9c;
+.main-nav a {
+    color: var(--white-color);
+    text-decoration: none;
+    padding: 0.5rem 0; /* 内边距以增加点击区域 */
+    transition: color 0.2s ease-in-out;
+    line-height: 1; /* 确保文字垂直居中 */
+}
+
+.main-nav a:hover,
+.main-nav a:focus { /* 添加:focus状态 */
+    color: var(--primary-color); /* 使用主色调作为悬停颜色 */
+    outline: none; /* 移除默认轮廓，依赖自定义高亮 */
 }
 
 /* 主容器布局 */
 .admin-container {
     display: flex;
-    flex: 1;
-    padding: 2rem;
-    gap: 2rem;
+    flex: 1; /* 占据剩余空间 */
+    padding: 1.5rem; /* 统一容器内边距 */
+    gap: 1.5rem; /* 侧边栏与主内容区之间的间距 */
 }
 
 /* 侧边栏样式 */
 .sidebar {
-    width: 220px;
-    background: #ffffff;
-    border-radius: 8px;
+    width: var(--sidebar-width);
+    background: var(--white-color);
+    border-radius: var(--border-radius-base);
     padding: 1rem;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--box-shadow-base);
+    flex-shrink: 0; /* 防止侧边栏在空间不足时被压缩 */
 }
 
 .sidebar h3 {
     margin-bottom: 1rem;
-    border-bottom: 2px solid #eee;
-    padding-bottom: 0.5rem;
-    color: #2c3e50;
+    border-bottom: 1px solid var(--border-color-light); /* 使用变量 */
+    padding-bottom: 0.75rem; /* 调整间距 */
+    color: var(--secondary-color);
+    font-size: 1.1rem; /* 调整字体大小 */
 }
 
 .sidebar ul {
     list-style: none;
-    padding-left: 0;
 }
 
 .sidebar li {
-    margin: 0.5rem 0;
+    margin: 0.3rem 0; /* 调整列表项间距 */
 }
 
 .sidebar a {
     text-decoration: none;
-    color: #333;
+    color: var(--dark-text-color);
     display: block;
-    padding: 0.5rem;
-    border-radius: 4px;
-    transition: background 0.3s, color 0.3s;
-    /* Added color transition */
+    padding: 0.6rem 0.75rem; /* 调整内边距 */
+    border-radius: var(--border-radius-small);
+    transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
 }
 
+/* 侧边栏激活项样式 (由JS在li上添加active类) */
+.sidebar li.active a, /* 如果JS在li上加active */
 .sidebar a:hover,
-.sidebar .active {
-    background: #3498db;
-    color: white;
+.sidebar a:focus {     /* 统一hover和focus效果 */
+    background-color: var(--primary-color);
+    color: var(--white-color);
+    outline: none;
 }
+/* 如果JS在a上加active */
+/* .sidebar a.active {
+    background-color: var(--primary-color);
+    color: var(--white-color);
+} */
+
 
 /* 主要内容区域 */
 .admin-main {
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 2rem;
+    gap: 1.5rem; /* 模块之间的间距 */
 }
 
 .module {
-    display: none;
+    display: none; /* 默认隐藏 */
     flex-direction: column;
     gap: 1.5rem;
+    opacity: 0; /* 用于配合过渡效果 */
+    visibility: hidden;
+    transition: opacity 0.3s ease-in-out, visibility 0s linear 0.3s;
 }
 
 .module.active {
-    display: flex;
+    display: flex; /* 激活时显示 */
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.3s ease-in-out, visibility 0s linear 0s;
 }
 
 /* 卡片样式 */
 .card {
-    background: white;
-    border-radius: 8px;
+    background: var(--white-color);
+    border-radius: var(--border-radius-base);
     padding: 1.5rem;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-    overflow: hidden;
+    box-shadow: var(--box-shadow-base);
+    /* overflow: hidden; */ /* 移除这个，除非特定卡片内有需要裁剪的内容，否则可能影响阴影 */
 }
 
 .card h3 {
     margin-bottom: 1rem;
-    color: #2c3e50;
+    color: var(--secondary-color);
+    font-size: 1.25rem; /* 统一标题大小 */
 }
 
-.card-container {
+.card-container { /* 用于并排显示多个卡片 */
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); /* 调整minmax */
     gap: 1.5rem;
 }
 
 /* 表格样式 */
 .table-responsive {
-    overflow-x: auto;
+    overflow-x: auto; /* 允许表格水平滚动 */
 }
 
 .data-table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 0.5rem;
+    margin-top: 1rem; /* 表格与上方元素的间距 */
 }
 
 .data-table thead {
-    background: #f0f0f0;
+    background: var(--table-header-bg);
 }
 
 .data-table th,
 .data-table td {
-    padding: 0.75rem;
+    padding: 0.85rem 1rem; /* 增加单元格内边距 */
     text-align: left;
-    border-bottom: 1px solid #ddd;
+    border-bottom: 1px solid var(--border-color);
+    vertical-align: middle; /* 单元格内容垂直居中 */
 }
 
 .data-table tr:hover {
-    background-color: #f9f9f9;
+    background-color: var(--hover-bg-color);
 }
 
-.data-table a {
-    color: #3498db;
+.data-table a.action-link { /* 表格内的操作链接 */
+    color: var(--primary-color);
     text-decoration: none;
-    margin: 0 5px;
+    margin: 0 0.3rem; /* 调整链接间距 */
+    font-weight: 500;
 }
-
-/* 图表样式 */
-canvas {
-    max-height: 400px;
+.data-table a.action-link:hover,
+.data-table a.action-link:focus {
+    text-decoration: underline;
+    color: var(--primary-color-darker);
+    outline: none;
+}
+.data-table a.delete-link {
+    color: var(--danger-color); /* 删除链接用危险色 */
 }
 
 /* 卡片头部操作区域样式 */
 .card-header {
     display: flex;
+    flex-wrap: wrap; /* 允许在小屏幕上换行 */
     justify-content: space-between;
     align-items: center;
     margin-bottom: 1rem;
-    padding-bottom: 0.75rem;
-    border-bottom: 1px solid #eee;
+    padding-bottom: 1rem; /* 调整内边距 */
+    border-bottom: 1px solid var(--border-color-light);
+    gap: 1rem; /* 标题和操作区域的间距 */
 }
 
 .card-header h3 {
-    margin-bottom: 0;
+    margin-bottom: 0; /* 移除重复的margin */
     white-space: nowrap;
-    min-width: 80px;
+    /* min-width: 80px; */ /* 移除固定最小宽度，让其自适应 */
 }
 
 .actions {
     display: flex;
     align-items: center;
     gap: 0.75rem;
-    /* Slightly increased gap for better spacing */
+    flex-wrap: wrap; /* 允许按钮等换行 */
 }
 
 .search-input {
-    padding: 0.6rem 0.85rem;
-    /* Slightly increased padding */
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 0.9rem;
-    min-width: 350px;
-    /* Slightly increased min-width */
+    padding: 0.65rem 1rem; /* 调整内边距 */
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-small);
+    font-size: 0.95rem; /* 调整字体大小 */
+    /* min-width: 350px; */ /* 使用flex-grow替代固定宽度 */
+    flex-grow: 1; /* 允许搜索框在actions区域内伸展 */
+    max-width: 400px; /* 可选：限制最大宽度 */
     transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
-    /* Smoother transition */
 }
 
 .search-input::placeholder {
-    color: #aaa;
+    color: var(--light-text-color);
     opacity: 1;
-    /* Firefox needs this */
 }
 
 .search-input:focus {
-    border-color: #3498db;
-    /* Highlight color on focus */
-    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.25);
-    /* Focus ring */
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px var(--focus-ring-color);
     outline: none;
-    /* Remove default browser outline */
 }
 
+/* 按钮通用样式 */
 .btn {
-    padding: 0.6rem 1.2rem;
-    /* Adjusted padding for better feel */
+    padding: 0.65rem 1.25rem;
     border: none;
-    border-radius: 4px;
+    border-radius: var(--border-radius-small);
     cursor: pointer;
     font-size: 0.9rem;
     font-weight: 500;
-    /* Slightly bolder text */
     text-decoration: none;
-    color: white;
-    transition: background-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out, transform 0.15s ease-in-out;
+    color: var(--white-color);
+    transition: background-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out, transform 0.1s ease-in-out;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    background-color: #010810; /* 默认按钮背景色，可以被 .btn-search 等覆盖 */
-    white-space: nowrap; /* 防止按钮内文字换行 */
-    min-width: 80px; /* 为按钮设置一个最小宽度，根据实际文字调整 */
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08); /* 更细微的阴影 */
+    white-space: nowrap; /* 强制不换行 */
+    min-width: 110px; /* 进一步增加最小宽度以确保四个汉字能放下 */
+    /* padding: 0.65rem 1rem; */ /* 根据min-width调整，确保内容不会太挤 */
+    background-color: #010810; /* 确保这是您期望的默认按钮背景色 */
 }
 
 .btn:hover {
-    /* Specific background-color changes will be in .btn-search:hover etc. */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-    /* Enhanced shadow on hover */
-    transform: translateY(-2px);
-    /* Slight lift effect */
+    box-shadow: var(--box-shadow-hover);
+    transform: translateY(-1px); /* 轻微上移 */
 }
 
 .btn:active {
     transform: translateY(0px);
-    /* Press down effect */
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.12);
-    /* Slightly reduced shadow when active */
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.06);
 }
 
 .btn:focus {
     outline: none;
-    /* Remove default outline */
-    /* The box-shadow for focus will be specific to button type for better theming */
+    /* 具体的焦点样式由子类定义 */
 }
 
+/* 特定按钮样式 */
 .btn-search:hover {
-    background-color: #2980b9;
-    /* box-shadow and transform are inherited from .btn:hover */
+    background-color: var(--primary-color-darker);
 }
-
 .btn-search:focus {
-    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.4), 0 4px 8px rgba(0, 0, 0, 0.15);
-    /* Blue focus ring + hover shadow */
+    box-shadow: 0 0 0 3px var(--focus-ring-color), var(--box-shadow-hover);
 }
 
 .btn-add:hover {
-    background-color: #27ae60;
-    /* box-shadow and transform are inherited from .btn:hover */
+    background-color: var(--success-color-darker);
 }
-
 .btn-add:focus {
-    box-shadow: 0 0 0 3px rgba(46, 204, 113, 0.4), 0 4px 8px rgba(0, 0, 0, 0.15);
-    /* Green focus ring + hover shadow */
+    box-shadow: 0 0 0 3px var(--focus-ring-success-color), var(--box-shadow-hover);
 }
 
+/* 表头排序/筛选指示器样式 */
+th[data-sortable],
+th[data-filterable-type] { /* 确保筛选表头也有手型光标 */
+    position: relative; /* 为::after伪元素定位 */
+}
+th[data-sortable]:hover,
+th[data-filterable-type]:hover {
+    cursor: pointer;
+    background-color: var(--table-header-bg) !important; /* 保持表头背景色或使用更浅的悬停色 */
+    filter: brightness(95%); /* 轻微变暗 */
+}
+
+th.sort-asc::after,
+th.sort-desc::after {
+    position: absolute; /* 绝对定位到表头单元格内 */
+    right: 0.75rem; /* 调整箭头位置 */
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.8em;
+    color: var(--primary-color);
+}
+th.sort-asc::after {
+    content: '▲'; /* Unicode 升序箭头 */
+}
+th.sort-desc::after {
+    content: '▼'; /* Unicode 降序箭头 */
+}
+th.filter-active { /* 性别筛选等激活时的样式 */
+    background-color: #e0e7ff !important; /* 用一个特定的浅蓝色高亮，确保覆盖 */
+    font-weight: bold;
+}
 
 /* 页脚样式 */
 .admin-footer {
-    background: #2c3e50;
-    color: white;
+    background: var(--secondary-color);
+    color: var(--white-color);
     text-align: center;
-    padding: 1rem;
-    margin-top: auto;
+    padding: 1.25rem 1rem; /* 调整内边距 */
+    margin-top: auto; /* 确保页脚在内容不足时也能固定在底部 */
 }
 
 /* 响应式设计 */
-@media (max-width: 768px) {
+@media (max-width: 992px) { /* 调整断点，例如平板 */
     .admin-container {
-        flex-direction: column;
+        gap: 1rem;
+        padding: 1rem;
     }
+    .sidebar {
+        width: var(--sidebar-width); /* 在中等屏幕上可能仍希望保持侧边栏 */
+    }
+    .card-header {
+        flex-direction: column; /* 卡片头部内容垂直排列 */
+        align-items: flex-start; /* 左对齐 */
+    }
+    .actions {
+        width: 100%; /* 操作区域占满宽度 */
+        justify-content: flex-start; /* 操作按钮左对齐 */
+        margin-top: 0.5rem; /* 与标题的间距 */
+    }
+    .search-input {
+        max-width: none; /* 允许搜索框在中等屏幕上更宽 */
+    }
+}
 
+@media (max-width: 768px) { /* 手机等小屏幕 */
+    .admin-header {
+        padding: 0.75rem 1rem;
+        height: auto; /* 允许头部高度自适应 */
+    }
+    .logo {
+        font-size: 1.3rem;
+    }
+    .main-nav ul {
+        gap: 1rem; /* 减小导航链接间距 */
+    }
+    .admin-container {
+        flex-direction: column; /* 垂直布局 */
+    }
     .sidebar {
         width: 100%;
         margin-bottom: 1rem;
     }
-
-    .actions {
-        gap: 0.5rem;
-        /* Reduce gap on smaller screens if necessary */
-    }
-
     .search-input {
-        min-width: 120px;
-        /* Adjust search input width for smaller screens */
+        min-width: 0; /* 移除最小宽度限制，使其能完全收缩 */
+        width: 100%; /* 在actions中占满可用空间，如果actions本身不是flex-grow的话 */
+    }
+    .btn {
+        padding: 0.6rem 1rem; /* 减小按钮内边距 */
+        font-size: 0.85rem;
+    }
+    .data-table th,
+    .data-table td {
+        padding: 0.6rem 0.75rem; /* 减小表格单元格内边距 */
     }
 }
 
-/* 表头排序/筛选指示器样式 */
-th[data-sortable]:hover,
-th[data-filterable-type]:hover {
-    cursor: pointer;
-    background-color: #e8f0fe !important; /* 使用 !important 确保覆盖 th:hover (如果有的话) */
+/* Alert / Flash Message 样式 (之前JS中用到) */
+.alert {
+    padding: 1rem; /* 调整内边距 */
+    margin-bottom: 1.5rem; /* 调整间距 */
+    border: 1px solid transparent;
+    border-radius: var(--border-radius-small);
+    position: relative;
+    opacity: 1; /* 初始可见 */
+    transition: opacity 0.4s ease-in-out; /* 淡出过渡 */
+}
+.alert-success {
+    color: var(--success-color-darker); /* 使用更深的颜色以保证对比度 */
+    background-color: #d4edda; /* 淡绿色背景 (来自Bootstrap) */
+    border-color: #c3e6cb;
+}
+.alert-danger {
+    color: #721c24; /* (来自Bootstrap) */
+    background-color: #f8d7da; /* 淡红色背景 (来自Bootstrap) */
+    border-color: #f5c6cb;
 }
 
-th.sort-asc::after {
-    content: ' ▲';
-    font-size: 0.8em;
-    color: #3498db; /* 排序指示器颜色 */
+/* 通用表单样式 (用于 detail.jsp 和其他表单页面如 addClassForm.jsp) */
+.form-group {
+    margin-bottom: 1.25rem; /* 表单项之间的间距 */
 }
 
-th.sort-desc::after {
-    content: ' ▼';
-    font-size: 0.8em;
-    color: #3498db; /* 排序指示器颜色 */
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500; /* 标签字体稍粗 */
+    color: var(--secondary-color); /* 标签颜色 */
 }
 
-/* 可以为激活的筛选状态添加特定视觉反馈，如果需要 */
-/* th.filter-active {
-    background-color: #d0e0f0 !important;
-    font-weight: bold;
-} */
+.form-control {
+    display: block;
+    width: 100%;
+    padding: 0.75rem 1rem; /* 输入框内边距 */
+    font-size: 0.95rem;    /* 输入框字体大小 */
+    font-family: var(--font-family-base);
+    line-height: var(--line-height-base);
+    color: var(--dark-text-color);
+    background-color: var(--white-color);
+    background-clip: padding-box;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-small);
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    appearance: none; /* 移除部分浏览器对 select 的默认样式 */
+}
+
+.form-control:focus {
+    border-color: var(--primary-color);
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem var(--focus-ring-color);
+}
+
+.form-control::placeholder {
+    color: var(--light-text-color);
+    opacity: 0.8;
+}
+
+/* 特定于 select 元素的微调，使其看起来与其他输入框更一致 */
+select.form-control {
+    /* 如果需要，可以设置特定高度或调整padding使其与其他输入框视觉对齐 */
+    /* 例如: height: calc( (var(--line-height-base) * 0.95rem) + (0.75rem * 2) + 2px); */
+    /* background-image for custom arrow can be added here if desired */
+}
+
+.form-group small { /* 用于输入框下方的提示文字 */
+    display: block;
+    margin-top: 0.3rem;
+    font-size: 0.85em;
+    color: var(--light-text-color);
+}
+
+.form-actions {
+    margin-top: 2rem; /* 操作按钮区域与上方元素的间距 */
+    padding-top: 1rem; /* 可选：如果需要分隔线，可以配合 border-top */
+    /* border-top: 1px solid var(--border-color-light); */
+    display: flex;
+    justify-content: flex-start; /* 按钮默认左对齐 */
+    gap: 0.75rem; /* 按钮之间的间距 */
+}
+
+/* 确保 detail.jsp 中的提交按钮样式统一 */
+.btn-submit { /* 用于主要的提交/保存按钮 */
+    background-color: var(--success-color);
+    color: var(--white-color);
+}
+.btn-submit:hover {
+    background-color: var(--success-color-darker);
+}
+.btn-submit:focus {
+     box-shadow: 0 0 0 3px var(--focus-ring-success-color), var(--box-shadow-hover);
+}
+
+.btn-cancel { /* 用于取消或返回按钮 */
+    background-color: var(--light-text-color); /* 使用浅文本色作为背景 */
+    color: var(--white-color);
+}
+.btn-cancel:hover {
+    background-color: #5a6268; /* 悬停时变深一点 */
+}
+.btn-cancel:focus {
+    box-shadow: 0 0 0 3px rgba(108, 117, 125, 0.4), var(--box-shadow-hover);
+}
