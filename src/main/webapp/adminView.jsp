@@ -71,9 +71,9 @@
                         <table class="data-table" id="class-list-table">
                             <thead>
                             <tr>
-                                <th>班级名称</th>
-                                <th>专业名称</th>
-                                <th>所属学院</th>
+                                <th data-sortable data-column-index="0" data-column-type="text">班级名称</th>
+                                <th data-sortable data-column-index="1" data-column-type="text">专业名称</th>
+                                <th data-sortable data-column-index="2" data-column-type="text">所属学院</th>
                                 <th>操作</th>
                             </tr>
                             </thead>
@@ -140,7 +140,11 @@
                         <table class="data-table" id="student-list-table">
                             <thead>
                             <tr>
-                                <th>学号</th><th>姓名</th><th>性别</th><th>班级</th><th>操作</th>
+                                <th data-sortable data-column-index="0" data-column-type="numeric">学号</th>
+                                <th data-sortable data-column-index="1" data-column-type="text">姓名</th>
+                                <th data-sortable data-column-index="2" data-column-type="text" data-filterable-type="gender">性别</th> <%-- 先按文本排序，后续可加特殊筛选 --%>
+                                <th data-sortable data-column-index="3" data-column-type="text">班级</th>
+                                <th>操作</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -263,5 +267,6 @@
 <footer class="admin-footer">
     <p>&copy; 2025 学生管理系统 | 当前管理员：${sessionScope.username}</p>
 </footer>
+<script src="${pageContext.request.contextPath}/assets/js/admin.js"></script>
 </body>
 </html>

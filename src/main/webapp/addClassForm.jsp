@@ -32,12 +32,14 @@
             color: #555;
         }
         .form-group input[type="text"],
-        .form-group input[type="number"] { /* 如果专业ID用number类型 */
+        .form-group input[type="number"],
+        .form-group select { /* 为 select 添加统一样式 */
             width: 100%;
             padding: 0.75rem;
             border: 1px solid #ccc;
             border-radius: 4px;
             font-size: 1rem;
+            background-color: white; /* 确保背景色与其他输入框一致 */
         }
         .form-actions {
             margin-top: 1.5rem;
@@ -80,14 +82,26 @@
             </div>
 
             <div class="form-group">
-                <label for="majorId">所属专业ID:</label>
-                <%-- TODO: 将来这里应该是一个从数据库加载的专业下拉列表 --%>
-                <%-- 目前暂时使用文本框输入专业ID --%>
-                <input type="number" id="majorId" name="majorId" placeholder="输入专业ID (可选)">
+                <label for="majorId">所属专业:</label> <%-- 修改标签文本 --%>
+                <select id="majorId" name="majorId">
+                    <option value="">-- 请选择专业 (可选) --</option> <%-- 修改默认选项文本 --%>
+                    <c:if test="${not empty majorList}"> <%-- 判断 majorList 是否为空 --%>
+                        <c:forEach var="major" items="${majorList}"> <%-- 迭代 majorList --%>
+                            <option value="${major.majorId}" ${param.majorId == major.majorId ? 'selected' : ''}>
+                                <c:out value="${major.majorName}" /> <%-- 显示专业名称 --%>
+                            </option>
+                        </c:forEach>
+                    </c:if>
+                    <c:if test="${empty majorList && empty errorMessageFromServlet}"> <%-- 判断 majorList 是否为空，并使用不同的错误变量名以区分 --%>
+                        <%-- errorMessageFromServlet 是假设 Servlet 在加载专业列表失败时设置的特定错误消息 --%>
+                        <%-- 如果只是单纯没有专业数据，则显示下面的 "没有可用的专业信息" --%>
+                        <option value="" disabled>没有可用的专业信息</option>
+                    </c:if>
+                </select>
                 <small>如果留空，则班级不关联特定专业。</small>
             </div>
             
-            <%-- 显示可能的错误消息 --%>
+            <%-- 显示可能的错误消息 (这个 errorMessage 通常是针对表单提交验证的) --%>
             <c:if test="${not empty errorMessage}">
                 <p style="color: red; margin-bottom: 1rem;"><c:out value="${errorMessage}" /></p>
             </c:if>

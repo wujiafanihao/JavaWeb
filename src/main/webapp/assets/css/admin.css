@@ -321,3 +321,28 @@ canvas {
         /* Adjust search input width for smaller screens */
     }
 }
+
+/* 表头排序/筛选指示器样式 */
+th[data-sortable]:hover,
+th[data-filterable-type]:hover {
+    cursor: pointer;
+    background-color: #e8f0fe !important; /* 使用 !important 确保覆盖 th:hover (如果有的话) */
+}
+
+th.sort-asc::after {
+    content: ' ▲';
+    font-size: 0.8em;
+    color: #3498db; /* 排序指示器颜色 */
+}
+
+th.sort-desc::after {
+    content: ' ▼';
+    font-size: 0.8em;
+    color: #3498db; /* 排序指示器颜色 */
+}
+
+/* 可以为激活的筛选状态添加特定视觉反馈，如果需要 */
+/* th.filter-active {
+    background-color: #d0e0f0 !important;
+    font-weight: bold;
+} */

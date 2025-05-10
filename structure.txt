@@ -36,10 +36,12 @@
             ├── dao                // 数据库操作类：StudentDAO, CourseDAO 等
                 └──AdminDao
                 └──ClassInfoDao
+                └──MajorDao
                 └──StudentDao
             ├── service            // 业务逻辑类：StudentService, CourseService 等
                 └──AdminService
                 └──ClassInfoService
+                └──MajorService
                 └──StudentService
             ├── utils              // 工具类：DBHelper, JDBC 连接等
                 └──DataBase
@@ -56,6 +58,8 @@
             └──css                  // CSS 文件
                 └──index.css
                 └──login.css
+            └──js
+                └──admin.js
             └──ima.png
         └──addClassForm.jsp
         └──addStudentForm.jsp
