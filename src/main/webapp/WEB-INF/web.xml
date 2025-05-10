@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="https://jakarta.ee/xml/ns/jakartaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_5_0.xsd"
+         version="5.0">
+
+   <!-- ContextLoaderListener 用于在 Web 应用启动时加载 Spring 应用上下文 -->
+   <listener>
+       <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+   </listener>
+
+   <!-- 指定 Spring 配置类 (JavaConfig) -->
+   <context-param>
+       <param-name>contextClass</param-name>
+       <param-value>org.springframework.web.context.support.AnnotationConfigWebApplicationContext</param-value>
+   </context-param>
+   <context-param>
+       <param-name>contextConfigLocation</param-name>
+       <!-- 指定您的 Java 配置类的完全限定名 -->
+       <param-value>com.azyasaxi.config.AppConfig</param-value>
+   </context-param>
+
+   <!-- 欢迎文件列表 (可选，如果需要指定默认首页) -->
+   <welcome-file-list>
+       <welcome-file>index.jsp</welcome-file>
+       <!-- 可以添加其他欢迎文件 -->
+   </welcome-file-list>
+
+</web-app>
