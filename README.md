@@ -1,1 +1,156 @@
 # JavaWeb
+
+项目结构：
+├──src
+    ├──java
+        ├──com.azyasaxi
+            ├── controller         // Servlet 控制器，如 StudentServlet、LoginServlet 等
+                └──AdminDashboardServlet // 用于重定向提供给adminView数据，有班级列表和学生列表
+                └──LoginServlet                 // 用于分析请求中的用户名和密码进行转向
+                └──SaveClassServlet             // 负责处理添加新班级的表单提交
+                └──SaveStudentServlet           // 负责处理添加新学生的表单提交。
+                └──ShowAddClassFormServlet      // 负责显示用于添加新班级的表单页面, 提供给addClassForm.jsp数据并且重定向
+                └──ShowAddStudentFormServlet    // 负责显示用于添加新学生的表单页面，提供给addStudentForm.jsp数据并且重定向
+            ├── filter             // 登录过滤器等 Filter 类
+                └──Filter
+            ├── model              // 实体类：Student, ClassInfo, Course, CreditSummary 等
+                └──Admin
+                └──ClassInfo
+                └──College
+                └──Course
+                └──CreditSummary
+                └──Enrollment
+                └──LeaveRequest
+                └──Major
+                └──Schedule
+                └──Student
+            ├── dao                // 数据库操作类：StudentDAO, CourseDAO 等
+                └──AdminDao
+                └──ClassInfoDao
+                └──StudentDao
+            ├── service            // 业务逻辑类：StudentService, CourseService 等
+                └──AdminService
+                └──ClassInfoService
+                └──StudentService
+            ├── utils              // 工具类：DBHelper, JDBC 连接等
+                └──DataBase
+                └──DBHelper
+                └──StudentDataInitializer // 这个类生成了50个学生信息，以及他们的数据
+            └── config             // Spring 配置（如使用 JavaConfig 或配置类）
+                └──AppCOnfig       // 负责定义应用程序的 beans、组件扫描规则以及其他配置。
+    ├──resources
+        ├──application.properties  // 配置文件，可以配置Mysql和springJDBC配置
+    └──webapp                      // Web 根目录，存放 JSP 文件和静态资源（图片、CSS、JS 等
+        ├──WEB-INF                 // Web 根目录下的 WEB-INF 目录，存放 web.xml 文件
+            └──web.xml
+        └──assets                  // 静态资源，如 CSS、JS、图片等
+            └──css                  // CSS 文件
+                └──index.css
+                └──login.css
+            └──ima.png
+        └──addClassForm.jsp
+        └──addStudentForm.jsp
+        └──index.jsp
+        └──loginPage.jsp
+        └──adminView.jsp
+        └──studentView.jsp
+├──pom.xml                         // Maven 项目配置文件
+
+controller：处理请求，调用 service 层，转发到 JSP；
+
+filter：放登录验证、权限控制等；
+
+model：纯 POJO 实体类；
+
+dao：封装 JDBC 操作，如 insertStudent(), getAllCourses()；
+
+service：写业务逻辑，如“学生选课同时更新学分”；
+
+utils：公用工具，如数据库连接池、字符串处理等；
+
+config：存 Spring 配置（可用注解或 XML）；
+
+数据库：
+// 1. 创建数据库
+"CREATE DATABASE IF NOT EXISTS " + dbName + " CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;",
+// 2. 使用数据库
+"USE " + dbName + ";",
+// 3. 创建Admin表 (管理员信息)
+"CREATE TABLE IF NOT EXISTS Admin (" +
+        "admin_id INT PRIMARY KEY AUTO_INCREMENT," +
+        "username VARCHAR(50) UNIQUE NOT NULL," +
+        "password VARCHAR(255) NOT NULL" +
+        ");",
+// 4. 创建College表 (学院信息)
+"CREATE TABLE IF NOT EXISTS College (" +
+        "college_id INT PRIMARY KEY AUTO_INCREMENT," +
+        "college_name VARCHAR(100) NOT NULL UNIQUE" + // 学院名唯一
+        ");",
+// 5. 创建Major表 (专业信息)
+"CREATE TABLE IF NOT EXISTS Major (" +
+        "major_id INT PRIMARY KEY AUTO_INCREMENT," +
+        "major_name VARCHAR(100) NOT NULL," +
+        "college_id INT," +
+        "FOREIGN KEY (college_id) REFERENCES College(college_id) ON DELETE CASCADE," + // 级联删除
+        "UNIQUE (major_name, college_id)" + // 同一学院下专业名唯一
+        ");",
+// 6. 创建ClassInfo表 (班级信息)
+"CREATE TABLE IF NOT EXISTS ClassInfo (" +
+        "class_id INT PRIMARY KEY AUTO_INCREMENT," +
+        "class_name VARCHAR(100) NOT NULL," +
+        "major_id INT," +
+        "FOREIGN KEY (major_id) REFERENCES Major(major_id) ON DELETE CASCADE," +
+        "UNIQUE (class_name, major_id)" + // 同一专业下班级名唯一
+        ");",
+// 7. 创建Student表 (学生基本信息)
+"CREATE TABLE IF NOT EXISTS Student (" +
+        "student_id INT PRIMARY KEY AUTO_INCREMENT," +
+        "name VARCHAR(100) NOT NULL," +
+        "gender ENUM('男', '女') NOT NULL," +
+        "class_id INT," +
+        "username VARCHAR(50) UNIQUE NOT NULL," + // 学生登录用户名
+        "password VARCHAR(255) NOT NULL," +      // 学生登录密码
+        "FOREIGN KEY (class_id) REFERENCES ClassInfo(class_id) ON DELETE SET NULL" + // 班级删除时学生仍在，但class_id为NULL
+        ");",
+// 8. 创建Course表 (课程信息)
+"CREATE TABLE IF NOT EXISTS Course (" +
+        "course_id INT PRIMARY KEY AUTO_INCREMENT," +
+        "course_name VARCHAR(100) NOT NULL," +
+        "course_teacher VARCHAR(100) NOT NULL," + // 课程教师
+        "credit DECIMAL(3,1) NOT NULL," +
+        "major_id INT," + // 课程所属专业，用于区分专业课和选修课的判断
+        "FOREIGN KEY (major_id) REFERENCES Major(major_id) ON DELETE CASCADE," +
+        "UNIQUE (course_name, major_id)" + // 同一专业下课程名唯一
+        ");",
+// 9. 创建Enrollment表 (修读学分信息，即选课记录和成绩)
+"CREATE TABLE IF NOT EXISTS Enrollment (" +
+        "enrollment_id INT PRIMARY KEY AUTO_INCREMENT," +
+        "student_id INT," +
+        "course_id INT," +
+        "grade DECIMAL(5,2)," + // 成绩，允许为空表示未出分
+        "FOREIGN KEY (student_id) REFERENCES Student(student_id) ON DELETE CASCADE," +
+        "FOREIGN KEY (course_id) REFERENCES Course(course_id) ON DELETE CASCADE," +
+        "UNIQUE (student_id, course_id)" + // 一个学生同一门课只能有一条选课记录
+        ");",
+// 10. 创建LeaveRequest表 (请假信息)
+"CREATE TABLE IF NOT EXISTS LeaveRequest (" +
+        "leave_id INT PRIMARY KEY AUTO_INCREMENT," +
+        "student_id INT," +
+        "reason TEXT NOT NULL," +
+        "start_date DATE NOT NULL," +
+        "end_date DATE NOT NULL," +
+        "status ENUM('待审批', '已批准', '已驳回') NOT NULL DEFAULT '待审批'," +
+        "request_date DATETIME DEFAULT CURRENT_TIMESTAMP," + // 申请提交时间
+        "approval_date DATETIME NULL," + // 审批时间
+        "approved_by_admin_id INT NULL," + // 审批管理员ID
+        "FOREIGN KEY (student_id) REFERENCES Student(student_id) ON DELETE CASCADE," +
+        "FOREIGN KEY (approved_by_admin_id) REFERENCES Admin(admin_id) ON DELETE SET NULL" +
+        ");",
+// 11. 创建CreditSummary视图 (修读学分统计视图)
+"CREATE OR REPLACE VIEW CreditSummary AS " +
+        "SELECT e.student_id, s.name AS student_name, SUM(c.credit) AS total_credits " +
+        "FROM Enrollment e " +
+        "JOIN Course c ON e.course_id = c.course_id " +
+        "JOIN Student s ON e.student_id = s.student_id " +
+        "WHERE e.grade >= 60.0 " + // 假设60分及以上获得学分
+        "GROUP BY e.student_id, s.name;"
