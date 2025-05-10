@@ -315,7 +315,7 @@
                         <tr>
                             <th data-sortable data-column-index="0" data-column-type="numeric">学生ID</th>
                             <th data-sortable data-column-index="1" data-column-type="text">学生姓名</th>
-                            <th data-sortable data-column-index="2" data-column-type="floatNumber">已获总学分</th> <%-- 使用 floatNumber 类型 --%>
+                            <th data-sortable data-column-index="2" data-column-type="numeric">已获总学分</th> <%-- 使用 floatNumber 类型 --%>
                             <th>操作</th> <%-- 例如：查看学分详情 --%>
                         </tr>
                         </thead>

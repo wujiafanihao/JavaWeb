@@ -22,7 +22,10 @@ document.addEventListener('DOMContentLoaded', function () {
             }
 
             const columnIndex = parseInt(this.dataset.columnIndex);
-            const columnTypeIsNumeric = this.dataset.columnType === 'numeric';
+            const columnType = this.dataset.columnType; // 获取列类型
+            // 判断是否为数字类型（包括 'numeric', 'floatNumber', 'integer' 等）
+            const columnTypeIsNumeric = (columnType === 'numeric' || columnType === 'floatNumber' || columnType === 'integer');
+            console.log(`Header clicked: columnType='${columnType}', columnTypeIsNumeric=${columnTypeIsNumeric}`); // 调试日志
 
             let currentSortDir = this.dataset.sortDir || 'desc'; // 默认为降序，点击后变为升序
             const newSortDir = currentSortDir === 'asc' ? 'desc' : 'asc';
@@ -146,7 +149,7 @@ document.addEventListener('DOMContentLoaded', function () {
             if (isNumeric) {
                 valA = parseFloat(cellAValue);
                 valB = parseFloat(cellBValue);
-                // console.log(`Numeric compare: '${cellAValue}' (${valA}) vs '${cellBValue}' (${valB})`); // 调试日志
+                console.log(`Numeric compare: cellA='${cellAValue}' (parsed: ${valA}), cellB='${cellBValue}' (parsed: ${valB})`); // 调试日志
 
                 const aIsNaN = isNaN(valA);
                 const bIsNaN = isNaN(valB);
