@@ -8,8 +8,10 @@ import java.util.Date; // 导入 Date 类用于处理日期和时间
  */
 public class LeaveRequest {
 
-    private int leaveId; // 请假记录的唯一标识符，主键，自增
-    private int studentId; // 提交请假申请的学生ID (外键关联 Student 表)
+    private Integer leaveId; // 请假记录的唯一标识符，主键，自增
+    private Integer studentId; // 提交请假申请的学生ID (外键关联 Student 表)
+    private String studentName; //  提交请假申请的学生姓名，不能为空
+    private String adminName; // 审批该请假申请的管理员姓名，可以为空
     private String reason; // 请假原因，不能为空
     private Date startDate; // 请假开始日期，不能为空
     private Date endDate; // 请假结束日期，不能为空
@@ -23,9 +25,11 @@ public class LeaveRequest {
     }
 
     // 包含所有字段的构造函数 (可选，根据需要添加)
-    public LeaveRequest(int leaveId, int studentId, String reason, Date startDate, Date endDate, String status, Date requestDate, Date approvalDate, Integer approvedByAdminId) {
+    public LeaveRequest(Integer leaveId, Integer studentId, String studentName, String  adminName,String reason, Date startDate, Date endDate, String status, Date requestDate, Date approvalDate, Integer approvedByAdminId) {
         this.leaveId = leaveId;
         this.studentId = studentId;
+        this.studentName = studentName;
+        this.adminName = adminName;
         this.reason = reason;
         this.startDate = startDate;
         this.endDate = endDate;
@@ -36,21 +40,29 @@ public class LeaveRequest {
     }
 
     // Getter 和 Setter 方法
-    public int getLeaveId() {
+    public Integer getLeaveId() {
         return leaveId;
     }
 
-    public void setLeaveId(int leaveId) {
+    public void setLeaveId(Integer leaveId) {
         this.leaveId = leaveId;
     }
 
-    public int getStudentId() {
+    public Integer getStudentId() {
         return studentId;
     }
 
-    public void setStudentId(int studentId) {
+    public void setStudentId(Integer studentId) {
         this.studentId = studentId;
     }
+
+    public String getStudentName() { return studentName; }
+
+    public void setStudentName(String studentName) { this.studentName = studentName; }
+
+    public String getAdminUserName() { return adminName; }
+
+    public void setAdminUsername(String adminName) { this.adminName = adminName; }
 
     public String getReason() {
         return reason;
@@ -114,6 +126,8 @@ public class LeaveRequest {
         return "LeaveRequest{" +
                 "leaveId=" + leaveId +
                 ", studentId=" + studentId +
+                ", studentName='" + studentName + '\'' +
+                ", adminName='" + adminName + '\'' +
                 ", reason='" + reason + '\'' +
                 ", startDate=" + startDate +
                 ", endDate=" + endDate +

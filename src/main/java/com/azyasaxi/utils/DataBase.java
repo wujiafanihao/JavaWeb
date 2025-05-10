@@ -151,7 +151,19 @@ public class DataBase {
                         "JOIN Course c ON e.course_id = c.course_id " +
                         "JOIN Student s ON e.student_id = s.student_id " +
                         "WHERE e.grade >= 60.0 " + // 假设60分及以上获得学分
-                        "GROUP BY e.student_id, s.name;"
+                        "GROUP BY e.student_id, s.name;",
+                // 12. 创建AdminLog表 (管理员操作日志)
+                "CREATE TABLE IF NOT EXISTS AdminLog (" +
+                        "log_id INT PRIMARY KEY AUTO_INCREMENT," +
+                        "admin_id INT," +
+                        "admin_username VARCHAR(50)," +
+                        "action_type VARCHAR(50) NOT NULL," +
+                        "target_entity VARCHAR(100)," +
+                        "target_entity_id VARCHAR(50)," +
+                        "action_description TEXT," +
+                        "action_timestamp DATETIME DEFAULT CURRENT_TIMESTAMP," +
+                        "FOREIGN KEY (admin_id) REFERENCES Admin(admin_id) ON DELETE SET NULL" +
+                        ");"
         };
 
         // 先连接到MySQL服务器，不指定数据库名，用于创建数据库

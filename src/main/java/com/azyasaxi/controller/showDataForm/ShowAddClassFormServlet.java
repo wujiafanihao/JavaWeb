@@ -1,4 +1,4 @@
-package com.azyasaxi.controller;
+package com.azyasaxi.controller.showDataForm;
 
 import com.azyasaxi.model.Major; // 导入 Major 模型类
 import com.azyasaxi.service.MajorService; // 导入 MajorService 类

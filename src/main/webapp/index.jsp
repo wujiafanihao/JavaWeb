@@ -9,7 +9,7 @@
 
 <div class="center-container">
     <h1><%= "Azyasaxi大学学生信息系统" %></h1>
-    <a href="loginPage.jsp">进 入</a>
+    <a href="${pageContext.request.contextPath}/loginPage.jsp">进 入</a>
 </div>
 
 </body>

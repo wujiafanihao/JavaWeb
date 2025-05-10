@@ -1,4 +1,4 @@
-package com.azyasaxi.controller;
+package com.azyasaxi.controller.showDataForm;
 
 import com.azyasaxi.model.ClassInfo;
 import com.azyasaxi.service.ClassInfoService;

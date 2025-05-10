@@ -1,5 +1,10 @@
 package com.azyasaxi.utils;
 
+import com.azyasaxi.dao.AdminLogDao; // 新增：导入 AdminLogDao
+import com.azyasaxi.model.AdminLog;  // 新增：导入 AdminLog
+import org.springframework.jdbc.core.JdbcTemplate; // 新增：导入 JdbcTemplate
+import org.springframework.jdbc.datasource.SingleConnectionDataSource; // 新增：导入 SingleConnectionDataSource
+
 import java.sql.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -11,6 +16,7 @@ public class StudentDataInitializer {
 
     private Connection conn;
     private Random random;
+    private AdminLogDao adminLogDao; // 新增：AdminLogDao 实例
 
     // 中文姓氏
     private static final String[] LAST_NAMES_CH = {"李", "王", "张", "刘", "陈", "杨", "赵", "黄", "周", "吴",
@@ -34,6 +40,10 @@ public class StudentDataInitializer {
     public StudentDataInitializer(Connection conn, Random random) {
         this.conn = conn;
         this.random = random;
+        // 使用传入的 Connection 创建 JdbcTemplate 和 AdminLogDao
+        // 注意：SingleConnectionDataSource(conn, false) 表示不关闭外部传入的连接
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(new SingleConnectionDataSource(conn, false));
+        this.adminLogDao = new AdminLogDao(jdbcTemplate);
     }
 
     /**
@@ -85,8 +95,72 @@ public class StudentDataInitializer {
                 }
             }
         }
-        System.out.println("已尝试添加 " + studentCount + " 个学生及其关联数据（课程表、请假记录）。");
+        System.out.println("已尝试添加 " + studentCount + " 个学生及其关联数据。");
+        
+        // 添加模拟管理员日志
+        addSampleAdminLogs();
     }
+
+    private void addSampleAdminLogs() {
+        System.out.println("开始添加模拟管理员操作日志...");
+        if (this.adminLogDao == null) {
+            System.err.println("AdminLogDao 未初始化，无法添加模拟日志。");
+            return;
+        }
+        try {
+            // 假设管理员ID为1，用户名为"admin" (与DataBase.java中addInitialAdmin一致)
+            Integer adminId = 1;
+            String adminUsername = "admin";
+
+            // 模拟日志1: 新增学生
+            adminLogDao.addLog(new AdminLog(adminId, adminUsername, "新增学生", "学生", "zhangsan001", "管理员 admin 添加了新学生: 张三 (用户名: zhangsan001)"));
+            
+            // 模拟日志2: 修改课程信息
+            // 假设课程ID为5存在 (需要根据实际初始化的课程ID调整，或使用课程名)
+            List<CourseInfo> courses = getAllCourses(); // 复用现有方法获取课程
+            if (!courses.isEmpty()) {
+                int sampleCourseId = courses.get(random.nextInt(courses.size())).courseId;
+                 adminLogDao.addLog(new AdminLog(adminId, adminUsername, "修改课程信息", "课程", String.valueOf(sampleCourseId), "管理员 admin 修改了课程 (ID: "+sampleCourseId+") 的学分。"));
+            } else {
+                 adminLogDao.addLog(new AdminLog(adminId, adminUsername, "修改课程信息", "课程", "示例课程名", "管理员 admin 修改了课程 '示例课程名' 的学分。"));
+            }
+
+
+            // 模拟日志3: 批准请假
+            // 假设请假申请ID为2存在 (需要根据实际初始化的请假ID调整)
+            // 为了简单，这里直接构造描述，实际应基于已存在的请假申请
+            adminLogDao.addLog(new AdminLog(adminId, adminUsername, "批准请假申请", "请假申请", "2", "管理员 admin 批准了请假申请 (ID: 2)"));
+            
+            // 模拟日志4: 修改学生成绩
+            List<Integer> studentIdsForLog = getStudentIdsForLog(3); // 获取最多3个学生ID用于日志
+            if (!studentIdsForLog.isEmpty() && !courses.isEmpty()) {
+                int studentIdForGradeLog = studentIdsForLog.get(random.nextInt(studentIdsForLog.size()));
+                int courseIdForGradeLog = courses.get(random.nextInt(courses.size())).courseId;
+                 adminLogDao.addLog(new AdminLog(adminId, adminUsername, "修改学生成绩", "学生选课记录", "S:" + studentIdForGradeLog + "_C:" + courseIdForGradeLog, "管理员 admin 修改了学生 (ID: "+studentIdForGradeLog+") 的课程 (ID: "+courseIdForGradeLog+") 成绩。"));
+            }
+
+
+            System.out.println("模拟管理员操作日志添加完毕。");
+        } catch (Exception e) {
+            System.err.println("添加模拟管理员日志时发生错误: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+    
+    private List<Integer> getStudentIdsForLog(int count) throws SQLException {
+        List<Integer> studentIds = new ArrayList<>();
+        String sql = "SELECT student_id FROM Student LIMIT ?";
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, count);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    studentIds.add(rs.getInt("student_id"));
+                }
+            }
+        }
+        return studentIds;
+    }
+
 
     private List<Integer> getClassIds() throws SQLException {
         List<Integer> classIds = new ArrayList<>();
